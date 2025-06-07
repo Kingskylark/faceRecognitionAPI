@@ -805,11 +805,24 @@ async def http_exception_handler(request, exc):
         content={"error": exc.detail, "status_code": exc.status_code}
     )
 
+# At the bottom of your main.py, replace:
 if __name__ == "__main__":
     uvicorn.run(
-        "main:app",  # Replace "main" with your filename if different
+        "main:app",
         host="0.0.0.0",
-        port=8000,
+        port=8000,  # Remove this line
         reload=True,
+        log_level="info"
+    )
+
+# With:
+if __name__ == "__main__":
+    import os
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run(
+        "main:app",
+        host="0.0.0.0",
+        port=port,
+        reload=False,  # Set to False for production
         log_level="info"
     )

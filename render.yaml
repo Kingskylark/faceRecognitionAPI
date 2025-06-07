@@ -1,9 +1,20 @@
 services:
   - type: web
-    name: fastapi-app
-    runtime: python
-    buildCommand: ""
-    startCommand: uvicorn app.main:app --host 0.0.0.0 --port 10000
+    name: face-recognition-api
+    env: python
+    plan: starter  # or free if available
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
     envVars:
       - key: PYTHON_VERSION
-        value: 3.10
+        value: 3.9
+      - key: PORT
+        fromService:
+          type: web
+          name: face-recognition-api
+          property: port
+    autoDeploy: true
+    region: oregon  # or your preferred region
+    branch: main  # your git branch
+    rootDir: .  # if your app is in root directory
